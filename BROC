@@ -1,0 +1,46 @@
+#edit-mode: -*- python -*-
+#coding:utf-8
+
+import os
+
+PROTO_INC=os.path.join(os.environ['HOME'], 'protobuf/include')
+PROTO_LIB=os.path.join(os.environ['HOME'], 'protobuf/lib/libprotobuf.a')
+BOOST_INC=os.path.join(os.environ['HOME'], 'boost/include')
+BOOST_LIB=os.path.join(os.environ['HOME'], 'boost/lib')
+PROTO_RES='$OUT/../src'
+
+#sofa proto static library file .a
+PROTO_LIBRARY('sofa_pbrpc',
+              'src/sofa/pbrpc/*.proto',
+               Include(PROTO_INC, 'src', PROTO_RES),
+               Libs(PROTO_LIB))
+
+#sofa ut proto static library file .a
+PROTO_LIBRARY('test_data',
+              'unit-test/*.proto',
+               Include(PROTO_INC, 'unit-test', PROTO_RES),
+               Libs(PROTO_LIB))
+
+#ut includes
+ut_inc=Include('/usr/local/include',
+                   '/root/boost/include',
+                   PROTO_INC,
+                   PROTO_RES,
+                   'src',
+                   '$OUT/../unit-test',
+                   '/root/boost/include')
+
+#UT_APPLICATION('test_atomic',
+#               Sources("unit-test/test_atomic.cc", Include('/usr/local/include', 'src', '/root/boost/include')),
+#               LDFlags('-lpthread', 'lpthread'),
+#               Libs("/usr/local/lib/libgtest.a"))
+
+#UT_APPLICATION('test_common',
+#               Sources("unit-test/test_common.cc", ut_inc),
+#               LDFlags('-lpthread', 'lpthread'),
+#               Libs("/usr/local/lib/libgtest.a", '$OUT_ROOT/doublesongsong/sofa/lib/libsofa_pbrpc.a'))
+
+#UT_APPLICATION('test_buffer',
+#               Sources("unit-test/test_buffer.cc", ut_inc),
+#               LDFlags('-lpthread', 'lpthread'),
+#               Libs("/usr/local/lib/libgtest.a"))
