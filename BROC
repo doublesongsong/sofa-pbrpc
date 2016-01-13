@@ -15,6 +15,10 @@ PROTO_LIBRARY('sofa_pbrpc',
                Include(PROTO_INC, 'src', PROTO_RES),
                Libs(PROTO_LIB))
 
+STATIC_LIBRARY('sofa',
+              Sources('src/sofa/pbrpc/*.cc', Include(PROTO_INC, 'src', PROTO_RES, BOOST_INC, '/usr/include')),
+               Libs(PROTO_LIB))
+
 #sofa ut proto static library file .a
 PROTO_LIBRARY('test_data',
               'unit-test/*.proto',
@@ -30,15 +34,15 @@ ut_inc=Include('/usr/local/include',
                    '$OUT/../unit-test',
                    '/root/boost/include')
 
-#UT_APPLICATION('test_atomic',
-#               Sources("unit-test/test_atomic.cc", Include('/usr/local/include', 'src', '/root/boost/include')),
-#               LDFlags('-lpthread', 'lpthread'),
-#               Libs("/usr/local/lib/libgtest.a"))
+UT_APPLICATION('test_atomic',
+               Sources("unit-test/test_atomic.cc", Include('/usr/local/include', 'src', '/root/boost/include')),
+               LDFlags('-lpthread', 'lpthread'),
+               Libs("/usr/local/lib/libgtest.a"))
 
-#UT_APPLICATION('test_common',
-#               Sources("unit-test/test_common.cc", ut_inc),
-#               LDFlags('-lpthread', 'lpthread'),
-#               Libs("/usr/local/lib/libgtest.a", '$OUT_ROOT/doublesongsong/sofa/lib/libsofa_pbrpc.a'))
+UT_APPLICATION('test_common',
+               Sources("unit-test/test_common.cc", ut_inc),
+               LDFlags('-lpthread', 'lpthread'),
+               Libs("/usr/local/lib/libgtest.a", '$OUT_ROOT/doublesongsong/sofa-pbrpc/output/lib/libsofa_pbrpc.a', '$OUT_ROOT/doublesongsong/sofa-pbrpc/output/lib/libsofa.a'))
 
 #UT_APPLICATION('test_buffer',
 #               Sources("unit-test/test_buffer.cc", ut_inc),
