@@ -3,19 +3,16 @@
 
 #sofa depends some third party libraries such as protobuf, boost, snappy, rt, gzip, gtest
 
-#protobuf is installed ~/protobuf
-import os
-PROTO_INC=os.path.join(os.environ['HOME'], 'protobuf/include')
-PROTO_LIB=os.path.join(os.environ['HOME'], 'protobuf/lib/libprotobuf.a')
-PROTO_RES='$OUT/../src'
+CONFIGS('brocdeps/protobuf@master@branch')
+CONFIGS('brocdeps/boost@master@branch')
+CONFIGS('brocdeps/gtest@master@branch')
 
-#boost is installed ~/boost
-BOOST_INC=os.path.join(os.environ['HOME'], 'boost/include')
-
-#gtest head files is in /usr/local/include
-SYS_INC='/usr/include /usr/loca/include'
-#gtest .a file
-G_TEST_LIB='/usr/local/lib/libgtest.a'
+PROTO_INC = '$WORKSPACE/brocdeps/protobuf/include'
+PROTO_LIB = '$WORKSPACE/brocdeps/protobuf/lib/libprotobuf.a'
+PROTO_RES = '$OUT/../src'
+BOOST_INC = '$WORKSPACE/brocdeps/boost/include'
+SYS_INC = '/usr/include'
+GTEST_LIB = '$WORKSPACE/brocdeps/gtest/lib/libgtest.a'
 
 #sofa proto static library file .a
 PROTO_LIBRARY('sofa-pbrpc',
@@ -36,12 +33,13 @@ PROTO_LIBRARY('test-data',
 APPLICATION('sofa-pbrpc_client',
             Sources('src/sofa/pbrpc/http-agent/*.cc', Include(PROTO_INC, PROTO_RES, BOOST_INC, 'src', SYS_INC)),
             LDFlags('-L/usr/lib64 -lpthread -lrt -lsnappy -lz', '-lpthread -lrt'),
-            Libs(G_TEST_LIB, '$OUT/lib/libsofa-pbrpc.a', '$OUT/lib/libsofa.a', '$OUT/lib/libtest-data.a', PROTO_LIB))
+            Libs(GTEST_LIB, '$OUT/lib/libsofa-pbrpc.a', '$OUT/lib/libsofa.a', '$OUT/lib/libtest-data.a', PROTO_LIB))
 
+######################### FOR UT######################################################
 #ut build options
 ut_inc = Include(SYS_INC, PROTO_INC, PROTO_RES, BOOST_INC, 'src', '$OUT/../unit-test')
 cxxflags = CxxFlags('-Dprivate=public', '-Dprivate=public')
-ut_libs = Libs(G_TEST_LIB, '$OUT/lib/libsofa-pbrpc.a', '$OUT/lib/libsofa.a', '$OUT/lib/libtest-data.a', PROTO_LIB)
+ut_libs = Libs(GTEST_LIB, '$OUT/lib/libsofa-pbrpc.a', '$OUT/lib/libsofa.a', '$OUT/lib/libtest-data.a', PROTO_LIB)
 ldflags = LDFlags('-lpthread', 'lpthread')
 
 UT_APPLICATION('test_atomic',
@@ -52,7 +50,7 @@ UT_APPLICATION('test_atomic',
 UT_APPLICATION('test_common',
                Sources("unit-test/test_common.cc", ut_inc, cxxflags),
                ldflags,
-               Libs(G_TEST_LIB, '$OUT/lib/libsofa-pbrpc.a', '$OUT/lib/libsofa.a'))
+               Libs(GTEST_LIB, '$OUT/lib/libsofa-pbrpc.a', '$OUT/lib/libsofa.a'))
 
 UT_APPLICATION('test_buffer',
                Sources("unit-test/test_buffer.cc", ut_inc, cxxflags),
@@ -93,3 +91,5 @@ UT_APPLICATION('test_tran_buf_pool',
                Sources("unit-test/test_tran_buf_pool.cc", ut_inc, cxxflags),
                ldflags,
                ut_libs)
+
+##########################FOR SAMPLE#######################################
