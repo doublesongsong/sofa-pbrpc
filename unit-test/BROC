@@ -1,0 +1,76 @@
+#edit-mode: -*- python -*-
+#coding:utf-8
+
+CONFIGS('brocdeps/gtest@master@branch')
+
+PROTO_INC = '$WORKSPACE/brocdeps/protobuf/include'
+PROTO_LIB = '$WORKSPACE/brocdeps/protobuf/lib/libprotobuf.a'
+PROTO_RES = '$OUT/../src'
+BOOST_INC = '$WORKSPACE/brocdeps/boost/include'
+SYS_INC = '/usr/include'
+GTEST_INC = '$WORKSPACE/brocdeps/gtest/include'
+GTEST_LIB = '$WORKSPACE/brocdeps/gtest/lib/libgtest.a'
+
+#ut build options
+UT_INC = Include(SYS_INC, PROTO_INC, PROTO_RES, GTEST_INC, BOOST_INC, '../src', '$OUT/../unit-test')
+UT_CXXFLAGS = CxxFlags('-Dprivate=public', '-Dprivate=public')
+UT_LIBS = Libs(GTEST_LIB, '$OUT/lib/libsofa-pbrpc.a', '$OUT/lib/libsofa.a', '$OUT/lib/libtest-data.a', PROTO_LIB)
+UT_LDFLAGS = LDFlags('-lpthread', 'lpthread')
+
+#sofa ut proto static library file .a
+PROTO_LIBRARY('test-data',
+              '*.proto',
+               Include(PROTO_INC, 'unit-test', PROTO_RES),
+               Libs(PROTO_LIB))
+
+UT_APPLICATION('test_atomic',
+               Sources("test_atomic.cc", UT_INC, UT_CXXFLAGS),
+               UT_LDFLAGS,
+               UT_LIBS)
+
+UT_APPLICATION('test_common',
+               Sources("test_common.cc", UT_INC, UT_CXXFLAGS),
+               UT_LDFLAGS,
+               Libs(GTEST_LIB, '$OUT/lib/libsofa-pbrpc.a', '$OUT/lib/libsofa.a'))
+
+UT_APPLICATION('test_buffer',
+               Sources("test_buffer.cc", UT_INC, UT_CXXFLAGS),
+               UT_LDFLAGS,
+               UT_LIBS)
+
+UT_APPLICATION('test_closure',
+               Sources("test_closure.cc", UT_INC, UT_CXXFLAGS),
+               UT_LDFLAGS,
+               UT_LIBS)
+
+UT_APPLICATION('test_epoll_support',
+               Sources("test_epoll_support.cc", UT_INC, UT_CXXFLAGS),
+               UT_LDFLAGS,
+               UT_LIBS)
+
+UT_APPLICATION('test_ext_closure',
+               Sources("test_ext_closure.cc", UT_INC, UT_CXXFLAGS),
+               UT_LDFLAGS,
+               UT_LIBS)
+
+UT_APPLICATION('test_io_service_pool',
+               Sources("test_io_service_pool.cc", UT_INC, UT_CXXFLAGS),
+               UT_LDFLAGS,
+               UT_LIBS)
+
+UT_APPLICATION('test_thread_group',
+               Sources("test_thread_group.cc", UT_INC, UT_CXXFLAGS),
+               UT_LDFLAGS,
+               UT_LIBS)
+
+UT_APPLICATION('test_timeout_manager',
+               Sources("test_timeout_manager.cc", UT_INC, UT_CXXFLAGS),
+               LDFlags('-lpthread -lrt', 'lpthread -lrt'),
+               UT_LIBS)
+
+UT_APPLICATION('test_tran_buf_pool',
+               Sources("test_tran_buf_pool.cc", UT_INC, UT_CXXFLAGS),
+               UT_LDFLAGS,
+               UT_LIBS)
+
+##########################FOR SAMPLE#######################################
